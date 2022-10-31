@@ -15,9 +15,9 @@
             <span class="input-group-text" id="basic-addon3">평수</span>
         </div>
         <input id="feet" type="number" class="form-control" placeholder="평수 입력" aria-label="Recipient's username"
-               aria-describedby="button-addon2" value="30">
+               aria-describedby="button-addon2" value="300">
         <div class="input-group-prepend">
-            <span class="input-group-text" id="basic-addon3">간격</span>
+            <span class="input-group-text" id="basic-addon4">간격</span>
         </div>
         <input id="interval" type="number" class="form-control" placeholder="간격 입력" aria-label="Recipient's username"
                aria-describedby="button-addon2" value="4">
@@ -116,16 +116,17 @@
 <script>
     $(document).ready(function () {
         const arr = [
-          [1, 2, 0, 0, 2],
-          [2, 0, 0, 0, 2],
-          [0, 8, 6, 6, 0],
-          [0, 8, 5, 6, 0],
-          [0, 2, 4, 6, 0],
-          [0, 3, 1, 6, 0],
-          [0, 4, 2, 6, 0],
-          [0, 5, 2, 6, 0]
+          [10, 20, 0, 0, 20],
+          [20, 0, 0, 0, 20],
+          [0, 80, 60, 60, 0],
+          [0, 80, 50, 60, 0],
+          [0, 20, 40, 60, 0],
+          [0, 30, 10, 60, 0],
+          [0, 40, 20, 60, 0],
+          [0, 50, 20, 60, 0]
         ];
 
+        const defaultFeet = 300;
         const days = 30;
 
         render($('#feet').val(), $('#interval').val());
@@ -141,6 +142,7 @@
 
             const intervalCount = parseInt(30 / interval);
 
+            const tableValueList = [];
             const array = [];
 
             for (let i = 0; i < rowList[0].childElementCount - 1; i++) {
@@ -149,6 +151,7 @@
             }
             for (let i = 0; i < rowList.length; i++) {//thead부분 제외.
 
+                tableValueList.push([]);
                 const row = rowList[i];
                 const tdsNum = row.childElementCount;
 
@@ -156,7 +159,8 @@
 
 
                 for (let j = 1; j < tdsNum; j++) {
-                  const value = arr[i][j - 1] * feet;
+                  const value = (arr[i][j - 1] / defaultFeet) * feet;
+                  tableValueList[i].push(value);
                   array[j - 1][i] = { group: row.dataset.group, value };
                   if (value != 0) {
                     row.cells[j].innerHTML = value + postfix;
@@ -192,14 +196,14 @@
                         k--;
                     }
 
-                    console.log(array);
                     for (let l = 0; l < array[i].length; l++) {
-                        console.log(array[i][l]);
-                        if (array[i][l].group === '1') {
-                            rowList[l].cells[i + 1].innerHTML = rowList[l].cells[i + 1].innerHTML + " 횟수: " + resultN;
-                        }
-                        if (array[i][l].group === '2') {
-                            rowList[l].cells[i + 1].innerHTML = rowList[l].cells[i + 1].innerHTML + " (횟수: " + (intervalCount - resultN) + ")";
+
+
+                        if (array[i][l].group !== undefined) {
+                            const result = array[i][l].group === '1' ? resultN : (intervalCount - resultN);
+                            const postfix = rowList[l].classList.contains("kiro") ? 'kg' : 'L';
+
+                            rowList[l].cells[i + 1].innerHTML = tableValueList[l][i] + postfix +  " (횟수: " + result + ") : 1회당 약 " + parseInt(tableValueList[l][i] / result) + postfix;
                         }
                     }
                 }
