@@ -159,7 +159,7 @@
 
 
                 for (let j = 1; j < tdsNum; j++) {
-                  const value = (arr[i][j - 1] / defaultFeet) * feet;
+                  const value = parseInt((arr[i][j - 1] / defaultFeet) * feet);
                   tableValueList[i].push(value);
                   array[j - 1][i] = { group: row.dataset.group, value };
                   if (value != 0) {
