@@ -1,0 +1,218 @@
+<html>
+<header>
+    <meta charset="utf-8">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/css/bootstrap.min.css"
+          integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</header>
+<body>
+<div class="container">
+    <h1>
+      샤인머스켓 시비프로그램(4~5년)
+    </h1>
+    <div class="input-group mb-3">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">평수</span>
+        </div>
+        <input id="feet" type="number" class="form-control" placeholder="평수 입력" aria-label="Recipient's username"
+               aria-describedby="button-addon2" value="30">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon3">간격</span>
+        </div>
+        <input id="interval" type="number" class="form-control" placeholder="간격 입력" aria-label="Recipient's username"
+               aria-describedby="button-addon2" value="4">
+        <div class="input-group-append">
+            <button id="button" class="btn btn-primary" type="button">계산하기</button>
+        </div>
+    </div>
+    <table id="table" class="table table-bordered">
+        <thead>
+        <tr>
+            <th scope="col">제품 / 시비 시기</th>
+            <th scope="col">밑거름</th>
+            <th scope="col">잎 전개~GA 1차</th>
+            <th scope="col">GA 1차 ~ GA 2차</th>
+            <th scope="col">GA 2차 ~ 7월 말</th>
+            <th scope="col">수확 후</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr class="kiro table-active" >
+            <th scope="row">야라 밀라 컴플렉스</th>
+            <td>1</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2kg</td>
+        </tr>
+        <tr class="kiro table-active">
+            <th scope="row">야라리바 나이트라보</th>
+            <td>2</td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td>2</td>
+        </tr>
+        <tr class="kiro table-warning" data-group="1">
+            <th scope="row">야라테라 칼시니트</th>
+            <td></td>
+            <td>8</td>
+            <td>6</td>
+            <td>6</td>
+            <td></td>
+        </tr>
+        <tr class="kiro table-warning" data-group="1">
+          <th scope="row">야라테라 K+</th>
+          <td></td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+          <td></td>
+        </tr>
+        <tr class="kiro table-success" data-group="2">
+          <th scope="row">야라테라 K+</th>
+          <td></td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+          <td></td>
+        </tr>
+        <tr class="kiro table-success" data-group="2">
+          <th scope="row">야라테라 MgS</th>
+          <td></td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+          <td></td>
+        </tr>
+        <tr class="kiro table-success" data-group="2">
+          <th scope="row">야라테라 MKP</th>
+          <td></td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+          <td></td>
+        </tr>
+        <tr class="liter table-success" data-group="2">
+          <th scope="row">야라테라 FK30</th>
+          <td></td>
+          <td>8</td>
+          <td>6</td>
+          <td>6</td>
+          <td></td>
+        </tr>
+        </tbody>
+    </table>
+</body>
+<script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"
+        integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/popper.js@1.14.7/dist/umd/popper.min.js"
+        integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1"
+        crossorigin="anonymous"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.3.1/dist/js/bootstrap.min.js"
+        integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM"
+        crossorigin="anonymous"></script>
+<script>
+    $(document).ready(function () {
+        const arr = [
+          [1, 2, 0, 0, 2],
+          [2, 0, 0, 0, 2],
+          [0, 8, 6, 6, 0],
+          [0, 8, 5, 6, 0],
+          [0, 2, 4, 6, 0],
+          [0, 3, 1, 6, 0],
+          [0, 4, 2, 6, 0],
+          [0, 5, 2, 6, 0]
+        ];
+
+        const days = 30;
+
+        render($('#feet').val(), $('#interval').val());
+        $('#button').click(function () {
+            render($('#feet').val(), $('#interval').val());
+
+        })
+
+        function render(feet, interval) {
+
+            const table = document.getElementById('table');
+            const rowList = table.tBodies[0].rows; // *1)rows collection
+
+            const intervalCount = parseInt(30 / interval);
+
+            const array = [];
+
+            for (let i = 0; i < rowList[0].childElementCount - 1; i++) {
+                const row = rowList[i];
+                array.push(new Array(row.length));
+            }
+            for (let i = 0; i < rowList.length; i++) {//thead부분 제외.
+
+                const row = rowList[i];
+                const tdsNum = row.childElementCount;
+
+                const postfix = row.classList.contains("kiro") ? 'kg' : 'L'
+
+
+                for (let j = 1; j < tdsNum; j++) {
+                  const value = arr[i][j - 1] * feet;
+                  array[j - 1][i] = { group: row.dataset.group, value };
+                  if (value != 0) {
+                    row.cells[j].innerHTML = value + postfix;
+                  }
+
+                };//td for
+            }//for
+
+            //console.log(array);
+
+            for (let i = 0; i < array.length; i++) {
+                const group1 = array[i].filter(obj => obj.group === '1').map(obj => obj.value);
+                const group2 = array[i].filter(obj => obj.group === '2').map(obj => obj.value);
+                const group1Sum = group1.reduce((a , b) => a + b, 0);
+                const group2Sum = group2.reduce((a , b) => a + b, 0);
+
+                let n = 1;
+                let k = intervalCount - n;
+
+                let min = 9999999;
+                let resultN = 1;
+                if (group1Sum !== 0 || group2Sum !== 0) {
+                    for (; n < intervalCount;) {
+                        const nCount = group1Sum / n;
+                        const kCount = group2Sum / k;
+                        const abs = Math.abs(nCount - kCount);
+                        if (abs < min) {
+                            min = abs;
+                            resultN = n;
+                        }
+                        console.log("n: " + n + " k: " + k + " abs: " + abs + " min: " + min);
+                        n++;
+                        k--;
+                    }
+
+                    console.log(array);
+                    for (let l = 0; l < array[i].length; l++) {
+                        console.log(array[i][l]);
+                        if (array[i][l].group === '1') {
+                            rowList[l].cells[i + 1].innerHTML = rowList[l].cells[i + 1].innerHTML + " 횟수: " + resultN;
+                        }
+                        if (array[i][l].group === '2') {
+                            rowList[l].cells[i + 1].innerHTML = rowList[l].cells[i + 1].innerHTML + " (횟수: " + (intervalCount - resultN) + ")";
+                        }
+                    }
+                }
+
+
+            }
+
+
+        }
+    })
+
+
+</script>
+
+</body>
+
+</html>
